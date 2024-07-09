@@ -1,14 +1,10 @@
 package br.com.picpay.services;
 
 import br.com.picpay.domain.user.CommonUser;
-import br.com.picpay.domain.user.User;
 import br.com.picpay.dto.UserDTO;
 import br.com.picpay.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
-import org.hibernate.TransactionException;
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;

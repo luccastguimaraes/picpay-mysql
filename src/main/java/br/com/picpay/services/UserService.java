@@ -1,5 +1,6 @@
 package br.com.picpay.services;
 
+import br.com.picpay.domain.transaction.Transaction;
 import br.com.picpay.domain.user.User;
 import br.com.picpay.dto.UserDTO;
 import br.com.picpay.repository.UserRepository;
@@ -25,7 +26,7 @@ public abstract class UserService<T extends User> {
 
    public abstract User findUserById(Long id);
 
-   public void save(T user) throws Exception {
+   public void save(User user) throws Exception {
       try {
          this.repository.save(user);
       } catch (ConstraintViolationException e) {
@@ -40,6 +41,16 @@ public abstract class UserService<T extends User> {
    }
 
    public abstract User createUser(UserDTO userDTO) throws Exception;
+
+   public void saveTransaction(Transaction transaction) throws Exception {
+      User user = transaction.getPayer();
+      user.addTransaction(transaction);
+      this.save(user);
+      user = transaction.getPayee();
+      user.addTransaction(transaction);
+      this.save(user);
+
+   }
 
    public List<User> getAllUsers() {
       return this.repository.findAll();

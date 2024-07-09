@@ -25,7 +25,7 @@ public class TransactionService {
    private CommonUserService commonUserService;
 
    @Autowired
-   private UserRepository userRepository;
+   private UserServiceFactory userServiceFactory;
 
    @Autowired
    private TransactionRepository transactionRepository;
@@ -55,10 +55,8 @@ public class TransactionService {
       CommonUser payer = validatePayer(transactionDTO);
       BigDecimal amountTransferred = transactionDTO.amountTransferred();
       validatePayerBalancer(payer, amountTransferred);
-      var payee = this.userRepository.findById(transactionDTO.payeeId())
-            .orElseThrow(
-                  () -> new RuntimeException("PayeeId not found")
-            );
+      var payee = this.userServiceFactory.getUserService(transactionDTO.payeeId()).findUserById(transactionDTO.payeeId());
+
       return externalAuthorizer(payer, payee, amountTransferred);
    }
 
@@ -118,8 +116,9 @@ public class TransactionService {
          payer.transfer(amountTransferred);
          payee.receive(amountTransferred);
          transactionRepository.save(transaction);
-         commonUserService.save(payer);
-         userRepository.save(payee);
+         commonUserService.saveTransaction(transaction); // salva os dois User automaticamente, em teoria.
+         //commonUserService.save(payer);
+         //userRepository.save(payee);
          status = STATUS_SUCCESS;
          msgPayer = "You have made a transfer of $" + amountTransferred;
          msgPayee = "You have received a transfer of $" + amountTransferred;
