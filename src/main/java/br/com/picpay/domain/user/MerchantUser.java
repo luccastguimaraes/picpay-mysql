@@ -2,7 +2,6 @@ package br.com.picpay.domain.user;
 
 
 import br.com.picpay.domain.transaction.Transaction;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -15,12 +14,8 @@ import java.util.List;
 @Getter
 public class MerchantUser extends User{
 
-   @Column(unique = true)
-   private String cnpj;
-
-   public MerchantUser(String firstName, String lastName, String document, String email, String password, BigDecimal balance, String cnpj) {
+   public MerchantUser(String firstName, String lastName, String document, String email, String password, BigDecimal balance) {
       super(firstName, lastName, document, email, password, balance, UserType.MERCHANT);
-      this.cnpj = cnpj;
    }
 
    public MerchantUser() {

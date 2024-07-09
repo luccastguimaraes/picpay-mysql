@@ -1,7 +1,6 @@
 package br.com.picpay.domain.user;
 
 import br.com.picpay.domain.transaction.Transaction;
-import br.com.picpay.dto.TransactionDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
