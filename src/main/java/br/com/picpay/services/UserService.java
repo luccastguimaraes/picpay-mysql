@@ -55,4 +55,8 @@ public abstract class UserService<T extends User> {
    public List<User> getAllUsers() {
       return this.repository.findAll();
    }
+
+   public List<Transaction> getTransactionsForUser(Long id){
+      return findUserById(id).getAllTransactions();
+   }
 }

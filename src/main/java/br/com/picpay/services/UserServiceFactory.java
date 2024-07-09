@@ -1,14 +1,10 @@
 package br.com.picpay.services;
 
-import br.com.picpay.domain.user.CommonUser;
-import br.com.picpay.domain.user.MerchantUser;
 import br.com.picpay.domain.user.User;
 import br.com.picpay.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.Optional;
 
 @Component
 public class UserServiceFactory {

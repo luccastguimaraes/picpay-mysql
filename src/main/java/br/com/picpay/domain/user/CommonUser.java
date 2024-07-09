@@ -1,6 +1,8 @@
 package br.com.picpay.domain.user;
 
 import br.com.picpay.domain.transaction.Transaction;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -16,6 +18,7 @@ import java.util.List;
 public class CommonUser extends User {
 
    @OneToMany(mappedBy = "payer")
+   @JsonBackReference
    private List<Transaction> transactionsAsPayer = new ArrayList<>();
 
    public CommonUser(String firstName, String lastName, String document, String email, String password, BigDecimal balance) {

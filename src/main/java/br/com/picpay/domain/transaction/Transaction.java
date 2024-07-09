@@ -3,6 +3,8 @@ package br.com.picpay.domain.transaction;
 
 import br.com.picpay.domain.user.CommonUser;
 import br.com.picpay.domain.user.User;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,9 +25,11 @@ public class Transaction {
    private BigDecimal amount;
    @ManyToOne
    @JoinColumn(name = "payer_id")
+   @JsonManagedReference
    private CommonUser payer;
    @ManyToOne
    @JoinColumn(name = "payee_id")
+   @JsonManagedReference
    private User payee;
    private LocalDateTime transactionTime;
 

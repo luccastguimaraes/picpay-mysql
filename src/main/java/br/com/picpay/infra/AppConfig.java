@@ -1,10 +1,7 @@
 package br.com.picpay.infra;
 
-import br.com.picpay.domain.user.CommonUser;
-import br.com.picpay.domain.user.MerchantUser;
 import br.com.picpay.repository.UserRepository;
 import br.com.picpay.services.*;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;

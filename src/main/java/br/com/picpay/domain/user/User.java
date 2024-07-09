@@ -1,6 +1,8 @@
 package br.com.picpay.domain.user;
 
 import br.com.picpay.domain.transaction.Transaction;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -28,6 +30,7 @@ public abstract class User {
    protected UserType userType;
 
    @OneToMany(mappedBy = "payee")
+   @JsonBackReference
    protected List<Transaction> transactionsAsPayee = new ArrayList<>();
 
    // protected para garantir que seja instanciada apenas atraves de subclass concretas
