@@ -1,6 +1,7 @@
 package br.com.picpay.services;
 
 import br.com.picpay.domain.user.MerchantUser;
+import br.com.picpay.dto.DadosListagemUser;
 import br.com.picpay.dto.UserDTO;
 import br.com.picpay.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class MerchantUserService extends UserService<MerchantUser> {
 
 
    @Override
-   public MerchantUser createUser(UserDTO userDTO) throws Exception {
+   public DadosListagemUser createUser(UserDTO userDTO) throws Exception {
       MerchantUser newUser = new MerchantUser(
             userDTO.firstName(),
             userDTO.lastName(),
@@ -34,6 +35,6 @@ public class MerchantUserService extends UserService<MerchantUser> {
             userDTO.balance()
       );
       save(newUser);
-      return newUser;
+      return toTransform(newUser);
    }
 }

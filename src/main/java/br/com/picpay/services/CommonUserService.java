@@ -1,6 +1,7 @@
 package br.com.picpay.services;
 
 import br.com.picpay.domain.user.CommonUser;
+import br.com.picpay.dto.DadosListagemUser;
 import br.com.picpay.dto.UserDTO;
 import br.com.picpay.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -39,7 +40,7 @@ public class CommonUserService extends UserService<CommonUser> {
 
 
    @Override
-   public CommonUser createUser(UserDTO userDTO) throws Exception {
+   public DadosListagemUser createUser(UserDTO userDTO) throws Exception {
       CommonUser newUser = new CommonUser(
             userDTO.firstName(),
             userDTO.lastName(),
@@ -49,6 +50,6 @@ public class CommonUserService extends UserService<CommonUser> {
             userDTO.balance()
       );
       save(newUser);
-      return newUser;
+      return toTransform(newUser);
    }
 }

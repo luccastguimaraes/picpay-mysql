@@ -18,7 +18,7 @@ import java.util.List;
 public class CommonUser extends User {
 
    @OneToMany(mappedBy = "payer")
-   @JsonBackReference
+   @JsonManagedReference
    private List<Transaction> transactionsAsPayer = new ArrayList<>();
 
    public CommonUser(String firstName, String lastName, String document, String email, String password, BigDecimal balance) {

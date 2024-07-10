@@ -2,11 +2,15 @@ package br.com.picpay.services;
 
 import br.com.picpay.domain.transaction.Transaction;
 import br.com.picpay.domain.user.User;
+import br.com.picpay.dto.DadosListagemUser;
+import br.com.picpay.dto.DadosUserTransactionsDTO;
 import br.com.picpay.dto.UserDTO;
 import br.com.picpay.repository.UserRepository;
 import org.hibernate.TransactionException;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -40,7 +44,7 @@ public abstract class UserService<T extends User> {
       }
    }
 
-   public abstract User createUser(UserDTO userDTO) throws Exception;
+   public abstract DadosListagemUser createUser(UserDTO userDTO) throws Exception;
 
    public void saveTransaction(Transaction transaction) throws Exception {
       User user = transaction.getPayer();
@@ -52,11 +56,15 @@ public abstract class UserService<T extends User> {
 
    }
 
-   public List<User> getAllUsers() {
-      return this.repository.findAll();
+   public Page<DadosListagemUser> getAllUsers(Pageable pageable) {
+      return this.repository.findAll(pageable).map(DadosListagemUser::new);
    }
 
-   public List<Transaction> getTransactionsForUser(Long id){
-      return findUserById(id).getAllTransactions();
+   public List<DadosUserTransactionsDTO> getTransactionsforUser(Long id){
+      return findUserById(id).getAllTransactions().stream().map(DadosUserTransactionsDTO::new).toList();
+   }
+
+   public DadosListagemUser toTransform(User user){
+      return new DadosListagemUser(user);
    }
 }

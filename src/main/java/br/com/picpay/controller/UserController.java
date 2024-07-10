@@ -1,19 +1,21 @@
 package br.com.picpay.controller;
 
-import br.com.picpay.domain.user.User;
+import br.com.picpay.domain.user.MerchantUser;
+import br.com.picpay.dto.DadosListagemUser;
 import br.com.picpay.dto.UserDTO;
-import br.com.picpay.repository.UserRepository;
 import br.com.picpay.services.CommonUserService;
 import br.com.picpay.services.MerchantUserService;
+import br.com.picpay.services.UserService;
+import br.com.picpay.services.UserServiceFactory;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/menu")
 public class UserController {
 
    @Autowired
@@ -21,23 +23,45 @@ public class UserController {
    @Autowired
    private MerchantUserService merchantUserService;
    @Autowired
-   private UserRepository repository;
+   private UserServiceFactory userServiceFactory;
 
-   @PostMapping("/common")
-   public ResponseEntity<User> createCommonUser(@RequestBody @Valid UserDTO userDTO) throws Exception {
-      User newUser = commonUserService.createUser(userDTO);
-      return ResponseEntity.ok(newUser);
+   @PostMapping("/createCommonUser")
+   public ResponseEntity<?> createCommonUser(@RequestBody @Valid UserDTO userDTO) throws Exception {
+      try {
+         return ResponseEntity.ok(commonUserService.createUser(userDTO));
+      } catch (Exception e) {
+         return ResponseEntity.badRequest().body(e.getMessage());
+      }
    }
 
-   @PostMapping("/merchant")
-   public ResponseEntity<User> createMerchantUser(@RequestBody @Valid UserDTO userDTO) throws Exception {
-      User newUser = merchantUserService.createUser(userDTO);
-      return ResponseEntity.ok(newUser);
+   @PostMapping("/createMerchantUser")
+   public ResponseEntity<?> createMerchantUser(@RequestBody @Valid UserDTO userDTO) throws Exception {
+      try {
+         return ResponseEntity.ok(merchantUserService.createUser(userDTO));
+      } catch (Exception e){
+         return ResponseEntity.badRequest().body(e.getMessage());
+      }
    }
 
-   @GetMapping
-   public ResponseEntity<List<User>> getAllUsers(){
-      List<User> users = this.repository.findAll();
-      return ResponseEntity.ok(users);
+   @GetMapping("/users")
+   public ResponseEntity<?> getAllUsers(Pageable pageable){
+      try {
+         UserService<MerchantUser> userService = merchantUserService;
+         Page<DadosListagemUser> users = userService.getAllUsers(pageable);
+         return ResponseEntity.ok(users);
+      } catch (Exception e){
+         return ResponseEntity.badRequest().body(e.getMessage());
+      }
    }
+
+   @GetMapping("/TransactionsForUser/{id}")
+   public ResponseEntity<?> getAllTransactionsForUser(@PathVariable Long id){
+      try {
+         return ResponseEntity.ok(userServiceFactory.getUserService(id).getTransactionsforUser(id));
+      } catch (Exception e){
+         return ResponseEntity.badRequest().body(e.getMessage());
+      }
+   }
+
+
 }

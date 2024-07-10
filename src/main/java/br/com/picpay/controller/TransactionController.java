@@ -2,7 +2,6 @@ package br.com.picpay.controller;
 
 import br.com.picpay.domain.transaction.Transaction;
 import br.com.picpay.dto.TransactionDTO;
-import br.com.picpay.services.NotificationSerivce;
 import br.com.picpay.services.TransactionService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -25,11 +25,11 @@ public class Transaction {
    private BigDecimal amount;
    @ManyToOne
    @JoinColumn(name = "payer_id")
-   @JsonManagedReference
+   @JsonBackReference
    private CommonUser payer;
    @ManyToOne
    @JoinColumn(name = "payee_id")
-   @JsonManagedReference
+   @JsonBackReference
    private User payee;
    private LocalDateTime transactionTime;
 

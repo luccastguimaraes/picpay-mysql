@@ -30,7 +30,7 @@ public abstract class User {
    protected UserType userType;
 
    @OneToMany(mappedBy = "payee")
-   @JsonBackReference
+   @JsonManagedReference
    protected List<Transaction> transactionsAsPayee = new ArrayList<>();
 
    // protected para garantir que seja instanciada apenas atraves de subclass concretas
