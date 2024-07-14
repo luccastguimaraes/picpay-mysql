@@ -13,19 +13,19 @@ public class ControllerExceptionHandler {
 
    @ExceptionHandler(DataIntegrityViolationException.class)
    public ResponseEntity duplicateThreatEntry(DataIntegrityViolationException exception){
-      ExceptionDTO exceptionDTO = new ExceptionDTO("400", "Usuario já cadastrado");
+      ExceptionDTO exceptionDTO = new ExceptionDTO(exception.getCause(), exception.getMessage());
       return ResponseEntity.badRequest().body(exceptionDTO);
    }
 
    @ExceptionHandler(EntityNotFoundException.class)
    public ResponseEntity threat404(EntityNotFoundException exception){
-      ExceptionDTO exceptionDTO = new ExceptionDTO("404", exception.getMessage());
+      ExceptionDTO exceptionDTO = new ExceptionDTO(exception.getCause(), exception.getMessage());
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exceptionDTO);
    }
 
    @ExceptionHandler(Exception.class)
    public ResponseEntity threatGeneralException(Exception exception){
-      ExceptionDTO exceptionDTO = new ExceptionDTO("500", exception.getMessage());
+      ExceptionDTO exceptionDTO = new ExceptionDTO(exception.getCause(), exception.getMessage());
       return ResponseEntity.badRequest().body(exceptionDTO);
    }
 }

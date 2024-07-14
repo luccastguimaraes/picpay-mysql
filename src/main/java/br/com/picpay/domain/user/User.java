@@ -1,13 +1,15 @@
 package br.com.picpay.domain.user;
 
 import br.com.picpay.domain.transaction.Transaction;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -15,7 +17,7 @@ import java.util.List;
 @Inheritance(strategy = InheritanceType.JOINED)
 @Getter
 @EqualsAndHashCode(of = "id")
-public abstract class User {
+public abstract class User implements UserDetails {
    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
    protected Long id;
    protected String firstName;
@@ -24,13 +26,13 @@ public abstract class User {
    protected String document;
    @Column(unique = true)
    protected String email;
+   @Setter
    protected String password;
    protected BigDecimal balance;
    @Enumerated(EnumType.STRING)
    protected UserType userType;
 
-   @OneToMany(mappedBy = "payee")
-   @JsonManagedReference
+   @OneToMany(mappedBy = "payee", fetch = FetchType.LAZY)
    protected List<Transaction> transactionsAsPayee = new ArrayList<>();
 
    // protected para garantir que seja instanciada apenas atraves de subclass concretas
@@ -47,24 +49,41 @@ public abstract class User {
    protected User() {
    }
 
-   protected User(UserType userType) {
-      this.userType = userType;
-   }
-
 
    public void receive(BigDecimal amountTransferred) {
       this.balance = this.balance.add(amountTransferred);
    }
 
-   public abstract List<Transaction> getAllTransactions();
-
    public abstract void addTransaction(Transaction transaction) throws Exception;
 
-   private void setTransactionsAsPayee(List<Transaction> transactionsAsPayee) {
-      this.transactionsAsPayee = transactionsAsPayee;
+
+   @Override
+   public Collection<? extends GrantedAuthority> getAuthorities() {
+      return List.of(new SimpleGrantedAuthority("ROLE_USER"));
    }
 
-   private List<Transaction> getTransactionsAsPayee() {
-      return transactionsAsPayee;
+   @Override
+   public String getUsername() {
+      return this.email;
+   }
+
+   @Override
+   public boolean isAccountNonExpired() {
+      return true;
+   }
+
+   @Override
+   public boolean isAccountNonLocked() {
+      return true;
+   }
+
+   @Override
+   public boolean isCredentialsNonExpired() {
+      return true;
+   }
+
+   @Override
+   public boolean isEnabled() {
+      return true;
    }
 }

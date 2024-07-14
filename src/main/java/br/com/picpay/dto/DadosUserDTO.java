@@ -1,10 +1,9 @@
 package br.com.picpay.dto;
 
 import br.com.picpay.domain.user.User;
-import br.com.picpay.domain.user.UserType;
 
-public record DadosUserDTO (Long id, UserType userType, String firstName) {
+public record DadosUserDTO (String userType, String firstName, String lastName, String document) {
    public DadosUserDTO (User u){
-      this(u.getId(), u.getUserType(), u.getFirstName());
+      this(u.getUserType().name(), u.getFirstName(), u.getLastName(), u.getDocument());
    }
 }

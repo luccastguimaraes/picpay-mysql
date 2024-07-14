@@ -8,6 +8,7 @@ import org.springframework.web.client.RestTemplate;
 
 @Configuration
 public class AppConfig {
+
    @Bean
    public RestTemplate restTemplate() {
       return new RestTemplate();
@@ -24,7 +25,7 @@ public class AppConfig {
    }
 
    @Bean
-   public UserServiceFactory userServiceFactory(UserRepository repository){
-      return new UserServiceFactory(repository, commonUserService(repository), merchantUserService(repository));
+   public UserServiceFactory userServiceFactory(UserRepository repository, CommonUserService commonUserService, MerchantUserService merchantUserService){
+      return new UserServiceFactory(repository, commonUserService, merchantUserService);
    }
 }

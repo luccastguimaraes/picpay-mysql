@@ -5,8 +5,10 @@ import br.com.picpay.domain.transaction.Transaction;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Getter;
+import org.springframework.security.core.GrantedAuthority;
 
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -18,21 +20,14 @@ public class MerchantUser extends User{
       super(firstName, lastName, document, email, password, balance, UserType.MERCHANT);
    }
 
-   public MerchantUser() {
-      super(UserType.MERCHANT);
-   }
-
-   @Override
-   public List<Transaction> getAllTransactions() {
-      return this.transactionsAsPayee;
-   }
+   public MerchantUser() {}
 
    @Override
    public void addTransaction(Transaction transaction) throws Exception {
       if (transaction.getPayee().id.equals(this.id)){
          this.transactionsAsPayee.add(transaction);
       } else {
-         throw new Exception("ERRO no metodo addTranscation da classe MerchantUser");
+         throw new Exception("Tried to save a transaction in the add Transaction method of the Merchant class");
       }
    }
 }

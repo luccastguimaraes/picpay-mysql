@@ -8,8 +8,6 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-
 @Service
 public class CommonUserService extends UserService<CommonUser> {
 
@@ -27,17 +25,6 @@ public class CommonUserService extends UserService<CommonUser> {
             .orElseThrow(() -> new EntityNotFoundException("CommonUser not found with ID: " + id));
    }
 
-   /*
-    parece redudante mas no meu pensamento
-    é para evitar que seja realizado transaction sem necessidade
-    por exemplo de valor 0
-    */
-   public void validateBalance (CommonUser user, BigDecimal amountTransferred) throws Exception {
-      if(user.getBalance().compareTo(BigDecimal.ZERO) <= 0 || user.getBalance().compareTo(amountTransferred) < 0) {
-         throw new Exception("Saldo insuficiente para realizar a transação.");
-      }
-   }
-
 
    @Override
    public DadosListagemUser createUser(UserDTO userDTO) throws Exception {
@@ -46,7 +33,7 @@ public class CommonUserService extends UserService<CommonUser> {
             userDTO.lastName(),
             userDTO.document(),
             userDTO.email(),
-            userDTO.password(),
+            passwordEncoder.encode(userDTO.password()),
             userDTO.balance()
       );
       save(newUser);

@@ -9,16 +9,17 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserServiceFactory {
 
-   @Autowired
-   private  UserRepository repository;
-   @Autowired
-   private CommonUserService commonUserService;
-   @Autowired
-   private MerchantUserService merchantUserService;
+   private final UserRepository repository;
+   private final CommonUserService commonUserService;
+   private final MerchantUserService merchantUserService;
 
-
+   @Autowired
    public UserServiceFactory(UserRepository repository, CommonUserService commonUserService, MerchantUserService merchantUserService) {
+      this.repository = repository;
+      this.commonUserService = commonUserService;
+      this.merchantUserService = merchantUserService;
    }
+
 
 
    public UserService getUserService(Long id){

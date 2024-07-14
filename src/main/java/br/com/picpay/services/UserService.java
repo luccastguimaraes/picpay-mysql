@@ -3,25 +3,28 @@ package br.com.picpay.services;
 import br.com.picpay.domain.transaction.Transaction;
 import br.com.picpay.domain.user.User;
 import br.com.picpay.dto.DadosListagemUser;
-import br.com.picpay.dto.DadosUserTransactionsDTO;
 import br.com.picpay.dto.UserDTO;
 import br.com.picpay.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.hibernate.TransactionException;
 import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
-import java.util.List;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 
 /*
    A ideia aqui é criar uma estrutura que permita funcionalidades comuns e
    específicas para cada tipo de User, permitindo reutilizar a mesma classe UserService
    , por meio de UserRepository desde que T seja uma subclass de User.
  */
+@Component
 public abstract class UserService<T extends User> {
 
-
+   @Autowired
+   protected PasswordEncoder passwordEncoder;
    protected UserRepository repository;
 
    public UserService(UserRepository repository) {
@@ -60,11 +63,15 @@ public abstract class UserService<T extends User> {
       return this.repository.findAll(pageable).map(DadosListagemUser::new);
    }
 
-   public List<DadosUserTransactionsDTO> getTransactionsforUser(Long id){
-      return findUserById(id).getAllTransactions().stream().map(DadosUserTransactionsDTO::new).toList();
+   public DadosListagemUser getUser(Long id) {
+      User user = this.repository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Find user by id not found"));
+      return toTransform(user);
+
    }
 
-   public DadosListagemUser toTransform(User user){
+   public DadosListagemUser toTransform(User user) {
       return new DadosListagemUser(user);
    }
+
 }

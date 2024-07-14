@@ -3,11 +3,10 @@ package br.com.picpay.domain.transaction;
 
 import br.com.picpay.domain.user.CommonUser;
 import br.com.picpay.domain.user.User;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -23,14 +22,15 @@ public class Transaction {
    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
    private Long id;
    private BigDecimal amount;
-   @ManyToOne
+   @ManyToOne(fetch = FetchType.LAZY)
    @JoinColumn(name = "payer_id")
-   @JsonBackReference
+   @JsonIgnore
    private CommonUser payer;
-   @ManyToOne
+   @ManyToOne(fetch = FetchType.LAZY)
    @JoinColumn(name = "payee_id")
-   @JsonBackReference
+   @JsonIgnore
    private User payee;
+   @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
    private LocalDateTime transactionTime;
 
 }

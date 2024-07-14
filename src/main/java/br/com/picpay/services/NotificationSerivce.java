@@ -12,14 +12,12 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class NotificationSerivce {
 
-   private RestTemplate restTemplate;
-   private final String mockSendNotification;
-
    @Autowired
-   public NotificationSerivce(RestTemplate restTemplate, @Value("${mock.send.notification}") String mockSendNotification) {
-      this.restTemplate = restTemplate;
-      this.mockSendNotification = mockSendNotification;
-   }
+   private RestTemplate restTemplate;
+   @Value("${mock.send.notification}")
+   private String mockSendNotification;
+
+
 
    public void sendNotification(String email, String status, String message) throws Exception {
       try{

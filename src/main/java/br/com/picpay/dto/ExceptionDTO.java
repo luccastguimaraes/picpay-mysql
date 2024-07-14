@@ -1,4 +1,4 @@
 package br.com.picpay.dto;
 
-public record ExceptionDTO(String status, String message) {
+public record ExceptionDTO(Throwable field, String message) {
 }

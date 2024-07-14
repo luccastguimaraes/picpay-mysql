@@ -13,9 +13,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
-@RequestMapping("/menu")
+@RequestMapping("/users")
 public class UserController {
 
    @Autowired
@@ -26,51 +27,46 @@ public class UserController {
    private UserServiceFactory userServiceFactory;
 
    @PostMapping("/createCommonUser")
-   public ResponseEntity<?> createCommonUser(@RequestBody @Valid UserDTO userDTO) throws Exception {
+   public ResponseEntity<?> createCommonUser(@RequestBody @Valid UserDTO userDTO, UriComponentsBuilder uriComponentsBuilder) throws Exception {
       try {
-         return ResponseEntity.ok(commonUserService.createUser(userDTO));
+         DadosListagemUser user = commonUserService.createUser(userDTO);
+         var uri = uriComponentsBuilder.path("/users/{id}").buildAndExpand(user.id()).toUri();
+         return ResponseEntity.created(uri).body(user);
       } catch (Exception e) {
          return ResponseEntity.badRequest().body(e.getMessage());
       }
    }
 
    @PostMapping("/createMerchantUser")
-   public ResponseEntity<?> createMerchantUser(@RequestBody @Valid UserDTO userDTO) throws Exception {
+   public ResponseEntity<?> createMerchantUser(@RequestBody @Valid UserDTO userDTO, UriComponentsBuilder uriComponentsBuilder) throws Exception {
       try {
-         return ResponseEntity.ok(merchantUserService.createUser(userDTO));
+         DadosListagemUser user = merchantUserService.createUser(userDTO);
+         var uri = uriComponentsBuilder.path("/users/{id}").buildAndExpand(user.id()).toUri();
+         return ResponseEntity.created(uri).body(user);
       } catch (Exception e){
          return ResponseEntity.badRequest().body(e.getMessage());
       }
    }
 
-   @GetMapping("/users")
+   @GetMapping
    public ResponseEntity<?> getAllUsers(Pageable pageable){
       try {
          UserService<MerchantUser> userService = merchantUserService;
          Page<DadosListagemUser> users = userService.getAllUsers(pageable);
-         return ResponseEntity.ok(users);
+         return ResponseEntity.ok().body(users);
       } catch (Exception e){
          return ResponseEntity.badRequest().body(e.getMessage());
       }
    }
 
-   @GetMapping("/TransactionsForUser/{id}")
-   public ResponseEntity<?> getAllTransactionsForUser(@PathVariable Long id){
-      try {
-         return ResponseEntity.ok(userServiceFactory.getUserService(id).getTransactionsforUser(id));
-      } catch (Exception e){
-         return ResponseEntity.badRequest().body(e.getMessage());
-      }
-   }
-
-   @GetMapping("/user/{id}")
+   @GetMapping("/{id}")
    public ResponseEntity<?> getUser(@PathVariable Long id){
       try {
-         return ResponseEntity.ok(userServiceFactory.getUserService(id).findUserById(id));
+         DadosListagemUser userById = userServiceFactory.getUserService(id).getUser(id);
+         return ResponseEntity.ok().body(userById);
       } catch (Exception e){
          return ResponseEntity.badRequest().body(e.getMessage());
       }
    }
-
 
 }

@@ -31,7 +31,7 @@ public class MerchantUserService extends UserService<MerchantUser> {
             userDTO.lastName(),
             userDTO.document(),
             userDTO.email(),
-            userDTO.password(),
+            passwordEncoder.encode(userDTO.password()),
             userDTO.balance()
       );
       save(newUser);
